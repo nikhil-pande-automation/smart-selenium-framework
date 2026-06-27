@@ -1,6 +1,7 @@
 package com.nikhil.framework.driver;
 
 import com.nikhil.framework.constants.FrameworkConstants;
+import com.nikhil.framework.enums.BrowserType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -81,11 +82,11 @@ public final class DriverFactory {
     }
 
     // Creates browser instance based on supplied browser name.
-    public static void initializeDriver(String browser) {
+    public static void initializeDriver(BrowserType browser) {
         WebDriver driver;
-        switch (browser.toLowerCase()) {
+        switch (browser) {
 
-            case "chrome":
+            case CHROME:
                 // Downloads and configures the compatible ChromeDriver.
                 WebDriverManager.chromedriver().setup();
 
@@ -95,13 +96,13 @@ public final class DriverFactory {
                 DriverManager.setDriver(driver); //Stores WebDriver in ThreadLocal.
                 break;
 
-            case "edge":
+            case EDGE:
                 driver = new EdgeDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
                 break;
 
-            case "firefox":
+            case FIREFOX:
                 driver = new FirefoxDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
