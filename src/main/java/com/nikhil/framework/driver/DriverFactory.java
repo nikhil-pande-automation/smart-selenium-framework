@@ -1,6 +1,6 @@
 package com.nikhil.framework.driver;
 
-import com.nikhil.framework.constants.FrameworkConstants;
+import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.enums.BrowserType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
@@ -97,12 +97,14 @@ public final class DriverFactory {
                 break;
 
             case EDGE:
+                WebDriverManager.edgedriver().setup();
                 driver = new EdgeDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
                 break;
 
             case FIREFOX:
+                WebDriverManager.firefoxdriver().setup();
                 driver = new FirefoxDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
@@ -165,7 +167,10 @@ public final class DriverFactory {
 
     // Closes browser and removes WebDriver from current thread.
     public static void quitDriver() {
-
+        if (DriverManager.getDriver() != null) {
+            DriverManager.getDriver().quit();
+            DriverManager.unloadDriver();
+        }
     }
 
     // Applies common browser settings. private bcoz will only use in this class.
@@ -179,7 +184,7 @@ public final class DriverFactory {
         // Maximum time to wait for page loading.
         driver.manage().timeouts()
                 .pageLoadTimeout(Duration.ofSeconds(
-                        FrameworkConstants.PAGE_LOAD_TIMEOUT));
+                        ConfigReader.getInstance().getPageLoadTimeout()));
     }
 
 }

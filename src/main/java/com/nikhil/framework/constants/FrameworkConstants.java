@@ -26,10 +26,6 @@ public final class FrameworkConstants {
     public static final String LOG_PATH =
             PROJECT_ROOT + "/logs/";
 
-    // Explicit wait timeout (seconds).
-    public static final int EXPLICIT_WAIT = 20;
 
-    // Page load timeout (seconds).
-    public static final int PAGE_LOAD_TIMEOUT = 30;
 
 }

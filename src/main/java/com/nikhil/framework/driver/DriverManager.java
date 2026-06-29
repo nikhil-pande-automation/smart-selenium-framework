@@ -34,6 +34,8 @@ public final class DriverManager {
     private DriverManager() {
     }
 
+    // One ThreadLocal container shared by the framework.
+    // Internally it stores a different WebDriver for each thread.
     private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
 
     /**
