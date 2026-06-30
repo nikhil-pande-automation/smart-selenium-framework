@@ -108,6 +108,16 @@ public final class ConfigReader {
 
     }
 
+    //Returns application username.
+    public String getUsername() {
+        return getValue("username").trim();
+    }
+
+    //    Returns application password
+    public String getPassword() {
+        return getValue("password").trim();
+    }
+
 
 
 }

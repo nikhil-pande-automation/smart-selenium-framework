@@ -37,3 +37,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Linux packages
+*.deb
+
+# Browser downloads
+google-chrome-stable_current_amd64.deb
