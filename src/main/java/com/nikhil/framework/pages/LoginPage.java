@@ -1,9 +1,6 @@
 package com.nikhil.framework.pages;
 
-import com.nikhil.framework.driver.DriverManager;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.By;
 
 /**
  * Purpose:
@@ -19,32 +16,50 @@ import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage extends BasePage {
 
-    //    Constructor to Initializes all @FindBy elements.
-    public LoginPage() {
-        PageFactory.initElements(
-                DriverManager.getDriver(),
-                this);
-    }
+    /**
+     * Removing the LoginPage constructor as initElements approach is deprecated. hence No need.
+     *
+     *  //    Constructor to Initializes all @FindBy elements.
+     *     public LoginPage() {
+     *         PageFactory.initElements(
+     *                 DriverManager.getDriver(),
+     *                 this);
+     *     }
+     */
 
-    @FindBy(name = "username")
-    private WebElement txtUsername;
+    /**
+     * Update to use By locator and to exclude the PageFactory WebElement type code also no need of Constructor anymore.
+     * Note: login method will gets update.
+     * Existing approach to use @FindBy and the new approach use By
+     *
+     * @FindBy(name = "username")
+     * private WebElement txtUsername;
+     *
+     */
+    private final By txtUsername = By.name("username");
+    private final By txtPassword = By.name("password");
+    private final By btnLogin = By.xpath("//input[@value='Log In']");
 
-    @FindBy(name = "password")
-    private WebElement txtPassword;
-
-    @FindBy(xpath = "//input[@value='Log In']")
-    private WebElement btnLogin;
 
     //    Opens application
     public void open() {
         openApplication();
     }
 
-    public void login(String username, String password) {
-
+    /**
+     * Old login method which works with @FindBy tag approach
+     * <p>
+     * public void login(String username, String password) {
+     * enterText(txtUsername, username);
+     * enterText(txtPassword, password);
+     * click(btnLogin);
+     * }
+     */
+//  New Login method: Login is no longer returns void. It returns HomePage because after login we're on the Home page.
+    public HomePage login(String username, String password) {
         enterText(txtUsername, username);
         enterText(txtPassword, password);
         click(btnLogin);
-
+        return new HomePage();
     }
 }
