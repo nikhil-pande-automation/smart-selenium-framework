@@ -6,7 +6,7 @@
 >
 > Framework Name: Smart Selenium Framework
 >
-> Current Version: v0.5.0
+> Current Version: v0.6.0
 >
 > Last Updated: 30-Jun-2026
 
@@ -155,9 +155,21 @@ First Login Automation
 
 ↓
 
+v0.13
+
+Modern By Locator Refactoring
+
+↓
+
+v0.14
+
+HomePage Introduction
+
+↓
+
 (Current)
 
-Refactoring to Modern By Locator Strategy
+First Successful Login Automation after Locator Refactoring
 
 ---
 
@@ -653,7 +665,72 @@ PASS
 
 Framework is now capable of executing a complete login scenario successfully.
 
----
+------------------------------------------------------
+
+Version : v0.13
+
+Title
+
+Modern By Locator Refactoring
+
+Git Commit
+
+First successful Login Automation after locators refactoring
+
+Objective
+
+Modernize the framework by replacing PageFactory based element handling with By locator strategy.
+
+Reason
+
+Although PageFactory is still supported, modern Selenium frameworks commonly prefer By locators because they provide:
+
+- Better readability
+- Easier debugging
+- Better support for dynamic elements
+- Less dependency on PageFactory internals
+
+Major Changes
+
+- WaitFactory updated to support By locators.
+- BasePage overloaded with reusable By methods.
+- LoginPage migrated to By locators.
+- HomePage introduced.
+- Login method now returns HomePage object.
+- First successful framework execution completed using the new architecture.
+
+Design Improvement
+
+The framework now follows the Page Transition Pattern.
+
+Example
+
+LoginPage
+
+↓
+
+login()
+
+↓
+
+HomePage
+
+Instead of returning void, page actions now return the next logical page object.
+
+Benefits
+
+- Better object-oriented design
+- Better readability
+- Better scalability
+- Industry standard Page Object implementation
+
+Framework Status
+
+Framework execution successful after locator refactoring.
+
+This becomes the new baseline architecture for future page objects.
+
+------------------------------------------------------
 
 # Current Framework Status
 
