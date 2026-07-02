@@ -1,10 +1,10 @@
 package com.nikhil.framework.pages;
 
+import com.nikhil.framework.actions.ElementActions;
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverManager;
 import com.nikhil.framework.waits.WaitFactory;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 /**
  * Purpose:
@@ -35,20 +35,22 @@ public class BasePage {
     }
 
     //    Overloaded method for By locator and to exclude the PageFactory WebElement type code
+    //    Because we are now using ElementActions.click. BasePage no longer knows how the click is performed.
     protected void click(By locator) {
-        WaitFactory.waitForClickable(locator).click();
+        ElementActions.click(
+                WaitFactory.waitForClickable(locator));
     }
 
     //    Overloaded method for By locator and to exclude the PageFactory WebElement type code
     protected void enterText(By locator, String text) {
-        WebElement element = WaitFactory.waitForVisibility(locator);
-        element.clear();
-        element.sendKeys(text);
+        ElementActions.enterText(WaitFactory.waitForVisibility(locator), text);
     }
 
     //    Overloaded method for By locator and to exclude the PageFactory WebElement type code
+    //    And after this ElementActions refactoring, BasePage won't need JavaScriptUtil directly anymore—
+    //    it will use ElementActions, so that import can be removed.
     protected String getText(By locator) {
-        return WaitFactory.waitForVisibility(locator).getText();
+        return ElementActions.getText(WaitFactory.waitForVisibility(locator));
     }
 
     /**
@@ -61,6 +63,6 @@ public class BasePage {
 
     //    Overloaded method for By locator and to exclude the PageFactory WebElement type code
     protected boolean isDisplayed(By locator) {
-        return WaitFactory.waitForVisibility(locator).isDisplayed();
+        return ElementActions.isDisplayed(WaitFactory.waitForVisibility(locator));
     }
 }
