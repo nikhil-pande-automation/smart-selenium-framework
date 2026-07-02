@@ -1,4 +1,4 @@
-package com.nikhil.framework.utils;
+package com.nikhil.framework.utilities;
 
 import com.nikhil.framework.driver.DriverManager;
 import org.openqa.selenium.JavascriptExecutor;

@@ -1,6 +1,6 @@
 package com.nikhil.framework.actions;
 
-import com.nikhil.framework.utils.JavaScriptUtil;
+import com.nikhil.framework.utilities.JavaScriptUtil;
 import org.openqa.selenium.WebElement;
 
 public final class ElementActions {

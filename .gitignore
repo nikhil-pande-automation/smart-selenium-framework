@@ -43,3 +43,9 @@ build/
 
 # Browser downloads
 google-chrome-stable_current_amd64.deb
+
+reports/
+
+logs/
+
+screenshots/
