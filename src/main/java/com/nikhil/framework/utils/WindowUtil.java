@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class WindowUtil {
+public final class WindowUtil {
+
+    private WindowUtil() {
+
+    }
 }

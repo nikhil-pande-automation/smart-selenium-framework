@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class DropdownUtil {
+public final class DropdownUtil {
+
+    private DropdownUtil() {
+
+    }
 }

@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class ScreenshotUtil {
+public final class ScreenshotUtil {
+
+    private ScreenshotUtil() {
+
+    }
 }

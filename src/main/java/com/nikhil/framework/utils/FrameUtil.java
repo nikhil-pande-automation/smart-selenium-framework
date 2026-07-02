@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class FrameUtil {
+public final class FrameUtil {
+
+    private FrameUtil() {
+
+    }
 }

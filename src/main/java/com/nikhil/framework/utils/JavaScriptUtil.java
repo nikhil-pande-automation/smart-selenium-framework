@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class JavaScriptUtil {
+public final class JavaScriptUtil {
+
+    private JavaScriptUtil() {
+
+    }
 }

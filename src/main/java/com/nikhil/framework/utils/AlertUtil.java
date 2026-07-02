@@ -1,4 +1,8 @@
 package com.nikhil.framework.utils;
 
-public class AlertUtil {
+public final class AlertUtil {
+
+    private AlertUtil() {
+
+    }
 }
