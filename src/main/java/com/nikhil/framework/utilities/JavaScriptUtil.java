@@ -1,10 +1,15 @@
 package com.nikhil.framework.utilities;
 
 import com.nikhil.framework.driver.DriverManager;
+import com.nikhil.framework.logger.LoggerFactory;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 public final class JavaScriptUtil {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(JavaScriptUtil.class);
 
     /**
      * Utility class for executing JavaScript operations.
@@ -50,7 +55,7 @@ public final class JavaScriptUtil {
      *                Never catch exceptions (unless we have a very good reason).
      */
     public static void click(WebElement element) {
-
+        logger.info("Performing JavaScript click");
         getJavaScriptExecutor().executeScript(
                 "arguments[0].click();",
                 element);
@@ -65,7 +70,7 @@ public final class JavaScriptUtil {
      *                the top of the viewport.
      */
     public static void scrollIntoView(WebElement element) {
-
+        logger.info("Scrolling element into view");
         getJavaScriptExecutor().executeScript(
                 "arguments[0].scrollIntoView(true);",
                 element);

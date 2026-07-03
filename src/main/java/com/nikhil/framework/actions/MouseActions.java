@@ -1,6 +1,8 @@
 package com.nikhil.framework.actions;
 
+import com.nikhil.framework.driver.DriverManager;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 /**
  * Performs reusable mouse operations.
@@ -11,36 +13,33 @@ public final class MouseActions {
     private MouseActions() {
     }
 
-//    Commenting below getAction() method as ActionFactory.java added
-//    private static Actions getAction() {
-//        return new Actions(DriverManager.getDriver());
-//    }
+    private static Actions getAction() {
+        return new Actions(DriverManager.getDriver());
+    }
 
     //    Moves mouse over an element.
     public static void hover(WebElement element) {
-        ActionFactory.getActions()
-                .moveToElement(element).perform();
+        getAction().moveToElement(element).perform();
     }
 
     public static void doubleClick(WebElement element) {
-        ActionFactory.getActions()
-                .doubleClick(element).perform();
+        getAction().doubleClick(element).perform();
     }
 
     public static void rightClick(WebElement element) {
-        ActionFactory.getActions().contextClick(element).perform();
+        getAction().contextClick(element).perform();
     }
 
     public static void dragAndDrop(WebElement element, WebElement target) {
-        ActionFactory.getActions().dragAndDrop(element, target).perform();
+        getAction().dragAndDrop(element, target).perform();
     }
 
     public static void clickAndHold(WebElement element) {
-        ActionFactory.getActions().clickAndHold(element).perform();
+        getAction().clickAndHold(element).perform();
     }
 
     public static void release(WebElement element) {
-        ActionFactory.getActions().release(element).perform();
+        getAction().release(element).perform();
     }
 
 }

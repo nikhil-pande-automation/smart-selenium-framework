@@ -1,6 +1,8 @@
 package com.nikhil.framework.pages;
 
 import com.nikhil.framework.actions.ElementActions;
+import com.nikhil.framework.actions.KeyboardActions;
+import com.nikhil.framework.actions.MouseActions;
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverManager;
 import com.nikhil.framework.waits.WaitFactory;
@@ -20,6 +22,8 @@ import org.openqa.selenium.By;
 
 public class BasePage {
 
+    // Browser Operations/methods
+
     //    Opens application URL from config.properties.
     protected void openApplication() {
         DriverManager.getDriver().get(ConfigReader.getInstance().getUrl());
@@ -36,6 +40,8 @@ public class BasePage {
 
     //    Overloaded method for By locator and to exclude the PageFactory WebElement type code
     //    Because we are now using ElementActions.click. BasePage no longer knows how the click is performed.
+
+    // Element Operations/methods
     protected void click(By locator) {
         ElementActions.click(
                 WaitFactory.waitForClickable(locator));
@@ -65,4 +71,46 @@ public class BasePage {
     protected boolean isDisplayed(By locator) {
         return ElementActions.isDisplayed(WaitFactory.waitForVisibility(locator));
     }
+
+    // Mouse Operations/methods
+    protected void hover(By locator) {
+        MouseActions.hover(WaitFactory.waitForVisibility(locator));
+    }
+
+    protected void doubleClick(By locator) {
+        MouseActions.doubleClick(WaitFactory.waitForClickable(locator));
+    }
+
+    protected void rightClick(By locator) {
+        MouseActions.rightClick(WaitFactory.waitForClickable(locator));
+    }
+
+    protected void clickAndHold(By locator) {
+        MouseActions.clickAndHold(WaitFactory.waitForClickable(locator));
+    }
+
+    protected void release(By locator) {
+        MouseActions.release(WaitFactory.waitForClickable(locator));
+    }
+
+    protected void dragAndDrop(By source, By target) {
+        MouseActions.dragAndDrop(WaitFactory.waitForVisibility(source), WaitFactory.waitForVisibility(target));
+    }
+
+    // Keyboard Operations/methods
+
+    protected void pressEnter() {
+        KeyboardActions.pressEnter();
+    }
+
+    protected void pressTab() {
+        KeyboardActions.pressTab();
+    }
+
+    protected void pressEscape() {
+        KeyboardActions.pressEscape();
+    }
+
+
+
 }

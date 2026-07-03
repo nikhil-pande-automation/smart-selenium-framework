@@ -17,12 +17,13 @@ import io.cucumber.testng.CucumberOptions;
  * It integrates Cucumber with the TestNG execution engine,
  * allowing TestNG to execute feature files.
  */
-@CucumberOptions(features = "src/test/resources/features", glue = "com.nikhil.tests", plugin = {"pretty", "html:reports/cucumber/cucumber.html", "json:reports/cucumber/cucumber.json"},
-        // Makes console output more readable.
-        monochrome = true,
-
-        // Disable Cucumber online report publishing.
-        publish = false)
+@CucumberOptions(
+        features = "src/test/resources/features",
+        glue = "com.nikhil.tests",
+        plugin = {"pretty", "html:reports/cucumber/cucumber.html", "json:reports/cucumber/cucumber.json"},
+        monochrome = true, // Makes console output more readable.
+        publish = false // Disable Cucumber online report publishing.
+)
 
 public class TestRunner extends AbstractTestNGCucumberTests {
 

@@ -2,8 +2,11 @@ package com.nikhil.tests.hooks;
 
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverFactory;
+import com.nikhil.framework.logger.LoggerFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Purpose:
@@ -20,13 +23,18 @@ import io.cucumber.java.Before;
 
 public class Hooks {
 
+    // LOGGER Uppercase because every class will use exactly this pattern, private static final fields are constants by convention.
+    private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
+
     @Before
-    public void setUp() {
+    public void setUp(Scenario scenario) {
+        LOGGER.info("Starting Scenario : {}", scenario.getName());
         DriverFactory.initializeDriver(ConfigReader.getInstance().getBrowser());
     }
 
     @After
-    public void tearDown(){
+    public void tearDown(Scenario scenario) {
+        LOGGER.info("Finished Scenario : {}", scenario.getName());
         DriverFactory.quitDriver();
     }
 

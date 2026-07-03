@@ -1,9 +1,14 @@
 package com.nikhil.framework.actions;
 
+import com.nikhil.framework.logger.LoggerFactory;
 import com.nikhil.framework.utilities.JavaScriptUtil;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebElement;
 
 public final class ElementActions {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(ElementActions.class);
 
     private ElementActions() {
     }
@@ -16,6 +21,7 @@ public final class ElementActions {
      * @param element target element
      */
     public static void click(WebElement element) {
+        logger.info("Clicking on element");
         try {
             element.click();
         } catch (Exception exception) {
@@ -33,6 +39,7 @@ public final class ElementActions {
      * @param text    value to enter
      */
     public static void enterText(WebElement element, String text) {
+        logger.info("Entering text");
         clear(element);
         element.sendKeys(text);
     }
@@ -48,6 +55,7 @@ public final class ElementActions {
      * @return element text
      */
     public static String getText(WebElement element) {
+        logger.info("Getting text from element");
         return element.getText();
     }
 
@@ -66,8 +74,4 @@ public final class ElementActions {
     public static boolean isSelected(WebElement element) {
         return element.isSelected();
     }
-
-
-
-
 }

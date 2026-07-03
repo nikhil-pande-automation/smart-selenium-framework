@@ -2,7 +2,9 @@ package com.nikhil.framework.driver;
 
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.enums.BrowserType;
+import com.nikhil.framework.logger.LoggerFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -91,23 +93,29 @@ public final class DriverFactory {
                 WebDriverManager.chromedriver().setup();
 
                 // Creates a new Chrome browser instance.
+                logger.info("Launching Chrome browser");
                 driver = new ChromeDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver); //Stores WebDriver in ThreadLocal.
+                logger.info("Chrome browser launched successfully");
                 break;
 
             case EDGE:
                 WebDriverManager.edgedriver().setup();
+                logger.info("Launching Edge browser");
                 driver = new EdgeDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
+                logger.info("Edge browser launched successfully");
                 break;
 
             case FIREFOX:
                 WebDriverManager.firefoxdriver().setup();
+                logger.info("Launching Firefox browser");
                 driver = new FirefoxDriver();
                 configureBrowser(driver);
                 DriverManager.setDriver(driver);
+                logger.info("Firefox browser launched successfully");
                 break;
 
             default:
@@ -168,8 +176,10 @@ public final class DriverFactory {
     // Closes browser and removes WebDriver from current thread.
     public static void quitDriver() {
         if (DriverManager.getDriver() != null) {
+            logger.info("Closing browser");
             DriverManager.getDriver().quit();
             DriverManager.unloadDriver();
+            logger.info("Browser closed successfully");
         }
     }
 
@@ -186,6 +196,9 @@ public final class DriverFactory {
                 .pageLoadTimeout(Duration.ofSeconds(
                         ConfigReader.getInstance().getPageLoadTimeout()));
     }
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(DriverFactory.class);
 
 }
 /**
