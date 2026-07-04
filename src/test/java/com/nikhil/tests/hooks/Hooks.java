@@ -4,6 +4,7 @@ import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverFactory;
 import com.nikhil.framework.logger.LoggerFactory;
 import com.nikhil.framework.reports.ReportManager;
+import com.nikhil.framework.utilities.ScreenshotUtil;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -41,6 +42,8 @@ public class Hooks {
 
         if (scenario.isFailed()) {
             ReportManager.fail("Scenario Failed");
+            String screenshot = ScreenshotUtil.takeScreenshot(scenario.getName());
+            ReportManager.attachScreenshot(screenshot);
         } else {
             ReportManager.pass("Scenario executed successfully");
         }

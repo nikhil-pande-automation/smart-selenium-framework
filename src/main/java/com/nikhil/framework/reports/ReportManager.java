@@ -44,4 +44,13 @@ public final class ReportManager {
                 .assignCategory(category);
     }
 
+    // Attach Screenshot to Extent Reports
+    public static void attachScreenshot(String path) {
+        try {
+            ExtentTestManager.getTest().addScreenCaptureFromPath(path);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -20,7 +20,7 @@ public final class FrameworkConstants {
 
     // Screenshot directory.
     public static final String SCREENSHOT_PATH =
-            PROJECT_ROOT + "/screenshots/";
+            REPORT_PATH + "screenshots/";
 
     // Log directory.
     public static final String LOG_PATH =
