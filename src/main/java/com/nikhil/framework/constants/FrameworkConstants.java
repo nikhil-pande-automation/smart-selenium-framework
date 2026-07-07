@@ -26,6 +26,11 @@ public final class FrameworkConstants {
     public static final String LOG_PATH =
             PROJECT_ROOT + "/logs/";
 
+    // Test data directory.
+    public static final String TESTDATA_PATH =
+            PROJECT_ROOT +
+                    "/src/test/resources/testdata/";
+
 
 
 }
