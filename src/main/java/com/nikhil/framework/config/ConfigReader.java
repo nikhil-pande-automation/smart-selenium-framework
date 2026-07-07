@@ -1,15 +1,15 @@
 package com.nikhil.framework.config;
 
-import com.nikhil.framework.constants.FrameworkConstants;
+import com.nikhil.framework.constants.ConfigKeys;
 import com.nikhil.framework.enums.BrowserType;
-
+import com.nikhil.framework.environment.EnvironmentManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 /**
  * Purpose:
- * Reads framework configuration from config.properties.
+ * Reads framework configuration from config-local.properties.
  * <p>
  * Design:
  * Implemented as Singleton so configuration is loaded
@@ -28,13 +28,18 @@ public final class ConfigReader {
 
     // Prevent object creation from outside the class.
     private ConfigReader() {
-        properties = new Properties();
 
-        try (FileInputStream fileInputStream = new FileInputStream(FrameworkConstants.CONFIG_FILE_PATH)) {
+        properties = new Properties();
+        String configFilePath = EnvironmentManager.getConfigFilePath();
+        System.out.println("Generated config file path is : " + configFilePath);
+
+        try (FileInputStream fileInputStream = new FileInputStream(configFilePath)) {
             properties.load(fileInputStream);
+            System.out.println("Loaded Properties : " + properties); //Check loaded property
         } catch (IOException e) {
-            throw new RuntimeException("Unable to load config.properties", e);
+            throw new RuntimeException("Unable to load configuration file : " + configFilePath, e);
         }
+
     }
 
     public static ConfigReader getInstance() {
@@ -57,14 +62,14 @@ public final class ConfigReader {
     public BrowserType getBrowser() {
 
         return BrowserType.valueOf(
-                getValue("browser").trim().toUpperCase());
+                getValue(ConfigKeys.BROWSER).trim().toUpperCase());
 
     }
 
     // Returns application URL.
     public String getUrl() {
 
-        return getValue("url").trim();
+        return getValue(ConfigKeys.URL).trim();
 
     }
 
@@ -72,7 +77,7 @@ public final class ConfigReader {
     public int getExplicitWait() {
 
         return Integer.parseInt(
-                getValue("explicit.wait").trim());
+                getValue(ConfigKeys.EXPLICIT_WAIT).trim());
 
     }
 
@@ -80,7 +85,7 @@ public final class ConfigReader {
     public int getPageLoadTimeout() {
 
         return Integer.parseInt(
-                getValue("page.load.timeout").trim());
+                getValue(ConfigKeys.PAGE_LOAD_TIMEOUT).trim());
 
     }
 
@@ -88,7 +93,7 @@ public final class ConfigReader {
     public boolean isHeadless() {
 
         return Boolean.parseBoolean(
-                getValue("headless").trim());
+                getValue(ConfigKeys.HEADLESS).trim());
 
     }
 
@@ -96,7 +101,7 @@ public final class ConfigReader {
     public boolean takeScreenshotOnPass() {
 
         return Boolean.parseBoolean(
-                getValue("take.screenshot.on.pass").trim());
+                getValue(ConfigKeys.SCREENSHOT_ON_PASS).trim());
 
     }
 
@@ -104,18 +109,18 @@ public final class ConfigReader {
     public boolean takeScreenshotOnFail() {
 
         return Boolean.parseBoolean(
-                getValue("take.screenshot.on.fail").trim());
+                getValue(ConfigKeys.SCREENSHOT_ON_FAIL).trim());
 
     }
 
     //Returns application username.
     public String getUsername() {
-        return getValue("username").trim();
+        return getValue(ConfigKeys.USERNAME).trim();
     }
 
     //    Returns application password
     public String getPassword() {
-        return getValue("password").trim();
+        return getValue(ConfigKeys.PASSWORD).trim();
     }
 
 

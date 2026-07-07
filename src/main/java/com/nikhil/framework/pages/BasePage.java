@@ -24,7 +24,7 @@ public class BasePage {
 
     // Browser Operations/methods
 
-    //    Opens application URL from config.properties.
+    //    Opens application URL from config-local.properties.
     protected void openApplication() {
         DriverManager.getDriver().get(ConfigReader.getInstance().getUrl());
     }

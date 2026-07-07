@@ -95,8 +95,8 @@ public final class DriverFactory {
                 // Creates a new Chrome browser instance.
                 logger.info("Launching Chrome browser");
                 driver = new ChromeDriver();
-                configureBrowser(driver);
                 DriverManager.setDriver(driver); //Stores WebDriver in ThreadLocal.
+                configureBrowser(driver);
                 logger.info("Chrome browser launched successfully");
                 break;
 
@@ -104,8 +104,8 @@ public final class DriverFactory {
                 WebDriverManager.edgedriver().setup();
                 logger.info("Launching Edge browser");
                 driver = new EdgeDriver();
-                configureBrowser(driver);
                 DriverManager.setDriver(driver);
+                configureBrowser(driver);
                 logger.info("Edge browser launched successfully");
                 break;
 
@@ -113,8 +113,8 @@ public final class DriverFactory {
                 WebDriverManager.firefoxdriver().setup();
                 logger.info("Launching Firefox browser");
                 driver = new FirefoxDriver();
-                configureBrowser(driver);
                 DriverManager.setDriver(driver);
+                configureBrowser(driver);
                 logger.info("Firefox browser launched successfully");
                 break;
 
@@ -185,13 +185,12 @@ public final class DriverFactory {
 
     // Applies common browser settings. private bcoz will only use in this class.
     private static void configureBrowser(WebDriver driver) {
-        // Maximizes browser window.
-        driver.manage().window().maximize();
-
-        // Starts every test with a clean browser session.
+        try {
+            driver.manage().window().maximize();
+        } catch (Exception e) {
+            logger.warn("Unable to maximize browser window. Continuing execution.");
+        }
         driver.manage().deleteAllCookies();
-
-        // Maximum time to wait for page loading.
         driver.manage().timeouts()
                 .pageLoadTimeout(Duration.ofSeconds(
                         ConfigReader.getInstance().getPageLoadTimeout()));

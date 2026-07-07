@@ -11,8 +11,8 @@ public final class FrameworkConstants {
     public static final String PROJECT_ROOT = System.getProperty("user.dir");
 
     // Configuration file path.
-    public static final String CONFIG_FILE_PATH =
-            PROJECT_ROOT + "/src/main/resources/config/config.properties";
+    public static final String CONFIG_DIRECTORY =
+            PROJECT_ROOT + "/src/main/resources/config/";
 
     // Report directory.
     public static final String REPORT_PATH =

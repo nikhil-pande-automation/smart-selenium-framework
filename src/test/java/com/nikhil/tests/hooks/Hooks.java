@@ -2,6 +2,7 @@ package com.nikhil.tests.hooks;
 
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverFactory;
+import com.nikhil.framework.driver.DriverManager;
 import com.nikhil.framework.logger.LoggerFactory;
 import com.nikhil.framework.reports.ReportManager;
 import com.nikhil.framework.utilities.ScreenshotUtil;
@@ -40,9 +41,10 @@ public class Hooks {
     @After
     public void tearDown(Scenario scenario) {
 
-        if (scenario.isFailed()) {
+        if (scenario.isFailed() && DriverManager.getDriver() != null) {
             ReportManager.fail("Scenario Failed");
-            String screenshot = ScreenshotUtil.takeScreenshot(scenario.getName());
+            String screenshot =
+                    ScreenshotUtil.takeScreenshot(scenario.getName());
             ReportManager.attachScreenshot(screenshot);
         } else {
             ReportManager.pass("Scenario executed successfully");
