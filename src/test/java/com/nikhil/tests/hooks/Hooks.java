@@ -1,6 +1,6 @@
 package com.nikhil.tests.hooks;
 
-import com.nikhil.framework.config.ConfigReader;
+import com.nikhil.framework.browser.BrowserManager;
 import com.nikhil.framework.driver.DriverFactory;
 import com.nikhil.framework.driver.DriverManager;
 import com.nikhil.framework.logger.LoggerFactory;
@@ -35,7 +35,8 @@ public class Hooks {
         ReportManager.createTest(scenario.getName());
         ReportManager.assignCategory("Regression"); //Later make this dynamic using Cucumber tags (@Smoke, @Regression)
         ReportManager.info("Launching browser and starting execution");
-        DriverFactory.initializeDriver(ConfigReader.getInstance().getBrowser());
+//        DriverFactory.initializeDriver(ConfigReader.getInstance().getBrowser());
+        DriverFactory.initializeDriver(BrowserManager.getBrowser()); //as per implementation of BrowserManager.java
     }
 
     @After
