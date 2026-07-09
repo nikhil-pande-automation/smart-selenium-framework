@@ -82,10 +82,15 @@ public final class BrowserOptionsFactory {
      * Before: if(ConfigReader.getInstance().isHeadless())
      * After: if(isHeadless())
      * This is "Don't repeat yourself" principle.
+     * Using HeadlessManager.isHeadless(); here so that we can use headless mode using maven commands,
+     * This will reduce the dependency from the config file.
+     *
+     * We can use: mvn clean test -Dheadless=true to run on headless mode
+     * even though configfile has headless=false OR vice versa
      *
      */
     private static boolean isHeadless() {
-        return ConfigReader.getInstance().isHeadless();
+        return HeadlessManager.isHeadless();
     }
 
 
