@@ -1,5 +1,6 @@
 package com.nikhil.framework.driver;
 
+import com.nikhil.framework.browser.BrowserOptionsFactory;
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.enums.BrowserType;
 import com.nikhil.framework.logger.LoggerFactory;
@@ -94,7 +95,7 @@ public final class DriverFactory {
 
                 // Creates a new Chrome browser instance.
                 logger.info("Launching Chrome browser");
-                driver = new ChromeDriver();
+                driver = new ChromeDriver(BrowserOptionsFactory.getChromeOptions());
                 DriverManager.setDriver(driver); //Stores WebDriver in ThreadLocal.
                 configureBrowser(driver);
                 logger.info("Chrome browser launched successfully");
@@ -103,7 +104,7 @@ public final class DriverFactory {
             case EDGE:
                 WebDriverManager.edgedriver().setup();
                 logger.info("Launching Edge browser");
-                driver = new EdgeDriver();
+                driver = new EdgeDriver(BrowserOptionsFactory.getEdgeOptions());
                 DriverManager.setDriver(driver);
                 configureBrowser(driver);
                 logger.info("Edge browser launched successfully");
@@ -112,7 +113,7 @@ public final class DriverFactory {
             case FIREFOX:
                 WebDriverManager.firefoxdriver().setup();
                 logger.info("Launching Firefox browser");
-                driver = new FirefoxDriver();
+                driver = new FirefoxDriver(BrowserOptionsFactory.getFirefoxOptions());
                 DriverManager.setDriver(driver);
                 configureBrowser(driver);
                 logger.info("Firefox browser launched successfully");
