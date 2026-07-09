@@ -87,6 +87,10 @@
         <!-- Compile & Run using JDK 17 -->
         <maven.compiler.release>17</maven.compiler.release>
 
+        <!-- Adding after setup for the parallel execution.
+        This gives us a default of one thread, preserving the current behavior.-->
+        <threads>1</threads>
+
     </properties>
 
     <build>
@@ -104,7 +108,25 @@
                         <include>**/*Runner.java</include>
                     </includes>
 
+                    <!-- START Parallel execution setup-->
+
+                    <properties>
+
+                        <property>
+                            <name>dataproviderthreadcount</name>
+                            <value>${threads}</value>
+                        </property>
+
+                    </properties>
+
+                    <systemPropertyVariables>
+
+                        <threads>${threads}</threads>
+
+                    </systemPropertyVariables>
+
                 </configuration>
+                <!-- END Parallel execution setup-->
 
             </plugin>
 
