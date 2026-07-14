@@ -2,6 +2,7 @@ package com.nikhil.framework.config;
 
 import com.nikhil.framework.constants.ConfigKeys;
 import com.nikhil.framework.enums.BrowserType;
+import com.nikhil.framework.enums.ExecutionType;
 import com.nikhil.framework.environment.EnvironmentManager;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -121,6 +122,39 @@ public final class ConfigReader {
     //    Returns application password
     public String getPassword() {
         return getValue(ConfigKeys.PASSWORD).trim();
+    }
+
+    public ExecutionType getExecutionType() {
+
+        return ExecutionType.valueOf(
+                getValue("execution").trim().toUpperCase()
+        );
+    }
+
+    /**
+     * Returns Selenium Grid URL from properties file.
+     *
+     * This URL is required only during REMOTE execution.
+     *
+     * Flow:
+     * config-local.properties
+     *          │
+     *          ▼
+     * grid.url=http://localhost:4444/wd/hub
+     *          │
+     *          ▼
+     * ConfigReader.getGridUrl()
+     *          │
+     *          ▼
+     * DriverFactory
+     *          │
+     *          ▼
+     * RemoteWebDriver connects to Selenium Grid.
+     *
+     * During LOCAL execution this value is not used.
+     */
+    public String getGridUrl() {
+        return getValue("grid.url").trim();
     }
 
 

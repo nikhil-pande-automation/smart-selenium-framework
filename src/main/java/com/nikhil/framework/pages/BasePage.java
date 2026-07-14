@@ -3,8 +3,8 @@ package com.nikhil.framework.pages;
 import com.nikhil.framework.actions.ElementActions;
 import com.nikhil.framework.actions.KeyboardActions;
 import com.nikhil.framework.actions.MouseActions;
-import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.driver.DriverManager;
+import com.nikhil.framework.environment.UrlManager;
 import com.nikhil.framework.waits.WaitFactory;
 import org.openqa.selenium.By;
 
@@ -26,7 +26,7 @@ public class BasePage {
 
     //    Opens application URL from config-local.properties.
     protected void openApplication() {
-        DriverManager.getDriver().get(ConfigReader.getInstance().getUrl());
+        DriverManager.getDriver().get(UrlManager.getUrl());
     }
 
     protected String getTitle() {

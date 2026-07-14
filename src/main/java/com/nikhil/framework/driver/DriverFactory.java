@@ -3,6 +3,9 @@ package com.nikhil.framework.driver;
 import com.nikhil.framework.browser.BrowserOptionsFactory;
 import com.nikhil.framework.config.ConfigReader;
 import com.nikhil.framework.enums.BrowserType;
+import com.nikhil.framework.enums.ExecutionType;
+import com.nikhil.framework.execution.ExecutionManager;
+import com.nikhil.framework.execution.GridManager;
 import com.nikhil.framework.logger.LoggerFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +13,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import java.time.Duration;
 
@@ -85,93 +91,265 @@ public final class DriverFactory {
     }
 
     // Creates browser instance based on supplied browser name.
+    /**
+     * Creates WebDriver based on:
+     *
+     * 1. Execution Type → LOCAL or REMOTE
+     * 2. Browser Type   → CHROME, EDGE or FIREFOX
+     *
+     * Flow:
+     *
+     * Hooks
+     *   │
+     *   ▼
+     * DriverFactory.initializeDriver(browser)
+     *   │
+     *   ▼
+     * ExecutionManager.getExecutionType()
+     *   │
+     *   ├── LOCAL
+     *   │      │
+     *   │      ▼
+     *   │   createLocalDriver(browser)
+     *   │
+     *   │      ├── ChromeDriver
+     *   │      ├── EdgeDriver
+     *   │      └── FirefoxDriver
+     *   │
+     *   └── REMOTE
+     *          │
+     *          ▼
+     *       createRemoteDriver(browser)
+     *          │
+     *          ▼
+     *       RemoteWebDriver
+     *          │
+     *          ▼
+     *       Selenium Grid / Browser Container
+     *
+     * Why keep LOCAL and REMOTE logic separate?
+     *
+     * If everything is written inside one large method,
+     * DriverFactory becomes difficult to understand and maintain.
+     *
+     * Separate methods make responsibility clear:
+     *
+     * createLocalDriver()  → Creates browser on current machine.
+     * createRemoteDriver() → Creates browser on Selenium server/Grid.
+     */
     public static void initializeDriver(BrowserType browser) {
+
         WebDriver driver;
+
+        /*
+         Reads execution mode.
+
+         It can come from:
+         1. JVM parameter: -Dexecution=remote
+         2. config-local.properties: execution=local
+        */
+        ExecutionType executionType = ExecutionManager.getExecutionType();
+
+        logger.info(
+                "Execution type : {}, Browser : {}", executionType, browser
+        );
+
+        /*
+         Decide whether browser should start:
+
+         LOCAL  → On same machine where test is running.
+         REMOTE → On Selenium Grid / browser container.
+        */
+        if (executionType == ExecutionType.LOCAL) {
+
+            driver = createLocalDriver(browser);
+
+        } else if (executionType == ExecutionType.REMOTE) {
+
+            driver = createRemoteDriver(browser);
+
+        } else {
+
+            throw new RuntimeException(
+                    "Unsupported execution type : " + executionType
+            );
+        }
+
+        /*
+         Store created driver inside ThreadLocal.
+
+         Example during parallel execution:
+
+         Thread-1 → ChromeDriver / RemoteWebDriver-1
+         Thread-2 → ChromeDriver / RemoteWebDriver-2
+
+         Each thread gets its own WebDriver.
+        */
+        DriverManager.setDriver(driver);
+
+        // Applies common browser settings after driver is successfully created.
+        configureBrowser(driver);
+
+        logger.info(
+                "{} browser launched successfully in {} mode",
+                browser,
+                executionType
+        );
+    }
+
+    /**
+     * Creates browser on the same machine where test execution is running.
+     *
+     * Example:
+     *
+     * IntelliJ / Local Terminal
+     *          │
+     *          ▼
+     * createLocalDriver(CHROME)
+     *          │
+     *          ▼
+     * new ChromeDriver()
+     *          │
+     *          ▼
+     * Chrome opens on local machine.
+     *
+     * This is the execution flow we were already using before adding
+     * remote execution support.
+     */
+    private static WebDriver createLocalDriver(BrowserType browser) {
+
         switch (browser) {
 
             case CHROME:
-                // Downloads and configures the compatible ChromeDriver.
+
+                // Downloads/configures compatible ChromeDriver.
                 WebDriverManager.chromedriver().setup();
 
-                // Creates a new Chrome browser instance.
-                logger.info("Launching Chrome browser");
-                driver = new ChromeDriver(BrowserOptionsFactory.getChromeOptions());
-                DriverManager.setDriver(driver); //Stores WebDriver in ThreadLocal.
-                configureBrowser(driver);
-                logger.info("Chrome browser launched successfully");
-                break;
+                logger.info("Launching local Chrome browser");
+
+                return new ChromeDriver(
+                        BrowserOptionsFactory.getChromeOptions()
+                );
 
             case EDGE:
+
                 WebDriverManager.edgedriver().setup();
-                logger.info("Launching Edge browser");
-                driver = new EdgeDriver(BrowserOptionsFactory.getEdgeOptions());
-                DriverManager.setDriver(driver);
-                configureBrowser(driver);
-                logger.info("Edge browser launched successfully");
-                break;
+
+                logger.info("Launching local Edge browser");
+
+                return new EdgeDriver(
+                        BrowserOptionsFactory.getEdgeOptions()
+                );
 
             case FIREFOX:
+
                 WebDriverManager.firefoxdriver().setup();
-                logger.info("Launching Firefox browser");
-                driver = new FirefoxDriver(BrowserOptionsFactory.getFirefoxOptions());
-                DriverManager.setDriver(driver);
-                configureBrowser(driver);
-                logger.info("Firefox browser launched successfully");
-                break;
+
+                logger.info("Launching local Firefox browser");
+
+                return new FirefoxDriver(
+                        BrowserOptionsFactory.getFirefoxOptions()
+                );
 
             default:
-                throw new RuntimeException("Unsupported browser : " + browser);
+
+                throw new RuntimeException(
+                        "Unsupported browser for local execution : " + browser
+                );
         }
-        /**
-         * WebDriver driver is Local variable bcoz initializeDriver() creates WebDriver driver = new ChromeDriver();
-         * Immediately after that: DriverManager.setDriver(driver); Now what happens?
-         * DriverFactory
-         * DriverFactory
-         *
-         * driver
-         *       │
-         *       ▼
-         * ChromeDriver
-         *
-         * ↓
-         *
-         * DriverManager.setDriver(driver)
-         *
-         * ↓
-         *
-         * ThreadLocal stores it
-         *
-         * ↓
-         *
-         * initializeDriver() finishes
-         *
-         * ↓
-         *
-         * local variable disappears
-         *
-         * ↓
-         *
-         * Browser is still alive
-         * Because the browser is now stored inside ThreadLocal.
-         *
-         * So the local variable has completed its job.
-         *
-         * If we make it static like: private static WebDriver driver; Now every thread shares the same variable.
-         * e.g.
-         * Thread-1
-         *
-         * driver → Chrome-1
-         *
-         * ↓
-         *
-         * Thread-2
-         *
-         * driver → Chrome-2
-         * Thread-1 loses its reference.
-         * 💥 Parallel execution breaks.
-         *Exactly what we are trying to avoid.
-         *
-         */
+    }
+
+    /**
+     * Creates browser on remote Selenium server/Grid.
+     *
+     * Important:
+     *
+     * RemoteWebDriver does NOT open browser inside Jenkins container.
+     *
+     * Flow:
+     *
+     * Jenkins Container
+     *        │
+     *        ▼
+     * Selenium Framework
+     *        │
+     *        ▼
+     * RemoteWebDriver
+     *        │
+     *        │ HTTP request
+     *        ▼
+     * Selenium Grid : 4444
+     *        │
+     *        ▼
+     * Chrome / Firefox / Edge browser container
+     *
+     * Therefore Jenkins only executes Java + Maven framework code.
+     * Actual browser execution happens inside Selenium container.
+     */
+    private static WebDriver createRemoteDriver(BrowserType browser) {
+
+        try {
+
+            // Reads Grid URL.
+            //
+            // Priority:
+            // 1. -Dgrid.url JVM parameter
+            // 2. config-local.properties
+            URL gridUrl = new URL(GridManager.getGridUrl());
+
+            logger.info(
+                    "Launching remote {} browser using Grid URL : {}",
+                    browser,
+                    gridUrl
+            );
+
+            switch (browser) {
+
+                case CHROME:
+
+                    // Sends ChromeOptions to Selenium Grid.
+                    // Grid creates Chrome browser session remotely.
+                    return new RemoteWebDriver(
+                            gridUrl,
+                            BrowserOptionsFactory.getChromeOptions()
+                    );
+
+                case EDGE:
+
+                    // Sends EdgeOptions to Selenium Grid.
+                    return new RemoteWebDriver(
+                            gridUrl,
+                            BrowserOptionsFactory.getEdgeOptions()
+                    );
+
+                case FIREFOX:
+
+                    // Sends FirefoxOptions to Selenium Grid.
+                    return new RemoteWebDriver(
+                            gridUrl,
+                            BrowserOptionsFactory.getFirefoxOptions()
+                    );
+
+                default:
+
+                    throw new RuntimeException(
+                            "Unsupported browser for remote execution : " + browser
+                    );
+            }
+
+        } catch (MalformedURLException e) {
+
+            // Example invalid URL:
+            // localhost:4444
+            //
+            // Correct URL:
+            // http://localhost:4444/wd/hub
+            throw new RuntimeException(
+                    "Invalid Selenium Grid URL : " +
+                            GridManager.getGridUrl(),
+                    e
+            );
+        }
     }
 
     // Closes browser and removes WebDriver from current thread.
@@ -209,3 +387,4 @@ public final class DriverFactory {
  * ✅ remove() is preferred over set(null) to avoid stale thread entries.
  * 🎯 Interview focus: Explain why ThreadLocal is needed, not just how to use it.
  */
+
