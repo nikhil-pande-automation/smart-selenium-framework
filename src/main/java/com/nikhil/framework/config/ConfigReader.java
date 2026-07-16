@@ -4,6 +4,9 @@ import com.nikhil.framework.constants.ConfigKeys;
 import com.nikhil.framework.enums.BrowserType;
 import com.nikhil.framework.enums.ExecutionType;
 import com.nikhil.framework.environment.EnvironmentManager;
+import com.nikhil.framework.logger.LoggerFactory;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -25,18 +28,22 @@ public final class ConfigReader {
     private final Properties properties;
 
     // Single instance of ConfigReader.
-    private static ConfigReader instance;
+//    private static ConfigReader instance; //commenting this line to write another logic for a proper singleton
+
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ConfigReader.class);
 
     // Prevent object creation from outside the class.
     private ConfigReader() {
 
         properties = new Properties();
         String configFilePath = EnvironmentManager.getConfigFilePath();
-        System.out.println("Generated config file path is : " + configFilePath);
+        LOGGER.info("Generated config file path : {}", configFilePath);
 
         try (FileInputStream fileInputStream = new FileInputStream(configFilePath)) {
             properties.load(fileInputStream);
-            System.out.println("Loaded Properties : " + properties); //Check loaded property
+            LOGGER.info("Configuration loaded successfully.");
+            LOGGER.debug("Loaded Properties : {}", properties); //Check loaded property
         } catch (IOException e) {
             throw new RuntimeException("Unable to load configuration file : " + configFilePath, e);
         }
@@ -44,10 +51,11 @@ public final class ConfigReader {
     }
 
     public static ConfigReader getInstance() {
-        if (instance == null) {
-            instance = new ConfigReader();
-        }
-        return instance;
+//        if (instance == null) {
+//            instance = new ConfigReader();
+//        }
+//        return instance; //commenting this 4 lines as line 28 code commented and adding new code below
+        return Holder.INSTANCE; //Holder class added below to bottom of this class
     }
 
     // Returns configuration value for the given key.
@@ -158,5 +166,38 @@ public final class ConfigReader {
     }
 
 
+    /**
+     * Holder class responsible for creating the Singleton instance.
+     *
+     * Why use Holder instead of:
+     *
+     * if(instance == null)
+     *
+     * ?
+     *
+     * Java loads a nested static class only when it is referenced
+     * for the first time.
+     *
+     * Until getInstance() is called,
+     * Holder is never loaded.
+     *
+     * When Holder is loaded,
+     * JVM guarantees that INSTANCE is created exactly once,
+     * even if multiple threads call getInstance() simultaneously.
+     *
+     * Advantages:
+     * ✔ Lazy initialization
+     * ✔ Thread-safe
+     * ✔ No synchronized keyword
+     * ✔ No performance overhead
+     *
+     * This pattern is known as the
+     * Initialization-on-demand holder idiom.
+     */
+    private static class Holder {
 
+        private static final ConfigReader INSTANCE =
+                new ConfigReader();
+
+    }
 }
