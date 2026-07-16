@@ -1,288 +1,273 @@
 # 🚀 Smart Selenium Framework
 
-> A scalable, reusable, and enterprise-ready Selenium Automation Framework built using Java, Selenium 4, Cucumber BDD, TestNG, and Maven.
+> An enterprise-ready Selenium automation framework built from scratch
+> using **Java, Selenium 4, Cucumber BDD, TestNG, Maven, Docker,
+> Selenium Grid and Jenkins**.
 
----
+------------------------------------------------------------------------
 
-## 📖 About the Project
+## 📖 Overview
 
-Smart Selenium Framework is an industry-oriented automation framework developed from scratch with a strong focus on software engineering principles rather than simply automating test cases.
+Smart Selenium Framework was designed to simulate how a real-world
+automation framework evolves inside an organization. The focus is not
+only on UI automation but also on software engineering practices such as
+clean architecture, thread safety, scalability, maintainability, CI
+integration, and reusable framework components.
 
-The objective of this project is to simulate how a real-world automation framework evolves inside a software organization.
+## ✨ Highlights
 
-Instead of concentrating only on Selenium scripts, this project demonstrates:
+-   Selenium 4
+-   Java 17 (Java 8 coding style where practical)
+-   Cucumber BDD + TestNG
+-   Page Object Model
+-   ThreadLocal WebDriver
+-   ThreadLocal ExtentTest
+-   Explicit Wait framework
+-   BrowserManager / EnvironmentManager / ExecutionManager
+-   Local & Remote execution
+-   Docker + Selenium Grid
+-   Jenkins parameterized builds
+-   Parallel execution
+-   Extent Reports with screenshots
+-   Log4j2 logging
+-   Excel, JSON and Properties based test data
 
-- Framework Architecture
-- Design Patterns
-- SOLID Principles
-- Clean Code Practices
-- Reusability
-- Maintainability
-- Scalability
-- Thread Safety
-- Enterprise Framework Design
+------------------------------------------------------------------------
 
-This repository also contains detailed documentation explaining every engineering decision made during the development of the framework.
+# 🏗 Framework Architecture
 
----
-
-# 🎯 Project Goals
-
-- Build an enterprise-level Selenium framework from scratch.
-- Follow modern automation framework architecture.
-- Apply software engineering best practices.
-- Keep the framework reusable and maintainable.
-- Support future parallel execution.
-- Support Data Driven Testing.
-- Support Cross Browser Testing.
-- Integrate Reporting and Logging.
-- Support CI/CD execution.
-
----
-
-# ⚙️ Technology Stack
-
-| Technology | Version |
-|------------|----------|
-| Java | 17 (Runtime) |
-| Java Coding Style | Java 8 Compatible |
-| Selenium | 4.x |
-| Test Runner | TestNG |
-| BDD | Cucumber |
-| Build Tool | Maven |
-| IDE | IntelliJ IDEA |
-| Version Control | Git |
-| Repository | GitHub |
-
----
-
-# 🏗 Current Framework Architecture
-
-```
-Feature File
-      │
-      ▼
+``` text
+Feature
+   │
+   ▼
 Runner
-      │
-      ▼
+   │
+   ▼
 Hooks
-      │
-      ▼
+   │
+   ▼
 DriverFactory
-      │
-      ▼
-DriverManager (ThreadLocal)
-      │
-      ▼
-WebDriver
-      │
-      ▼
-BasePage
-      │
-      ▼
-Page Objects
-      │
-      ▼
-WaitFactory
-      │
-      ▼
-Application
+   │
+   ├── LOCAL
+   │      └── ChromeDriver / FirefoxDriver / EdgeDriver
+   │
+   └── REMOTE
+          └── RemoteWebDriver
+                 │
+                 ▼
+          Selenium Grid
+                 │
+                 ▼
+          Browser Container
+                 │
+                 ▼
+            Application
 ```
 
----
+------------------------------------------------------------------------
 
-# 📂 Project Structure
+# 🔄 Parallel Execution
 
-```
-smart-selenium-framework
-
-│
-├── docs
-│   ├── 01-FrameworkEvolution.md
-│   ├── 02-GitCommitHistory.md
-│   ├── 03-Architecture.md
-│   ├── 04-DesignPatterns.md
-│
-├── src
-│   ├── main
-│   │
-│   └── java
-│       └── com.nikhil.framework
-│
-│           ├── config
-│           ├── constants
-│           ├── driver
-│           ├── enums
-│           ├── pages
-│           └── waits
-│
-│
-└── test
-    ├── hooks
-    ├── runners
-    ├── stepdefinitions
-    └── features
+``` text
+Scenario 1 ─┐
+Scenario 2 ─┼── TestNG DataProvider(parallel=true)
+Scenario 3 ─┘
+         │
+         ▼
+ ThreadLocal<WebDriver>
+         │
+         ▼
+ Independent browser session per thread
 ```
 
----
+------------------------------------------------------------------------
 
-# ✨ Features Implemented
+# 🧰 Technology Stack
 
-### Framework Core
+  Technology         Details
+  ------------------ -------------------------
+  Language           Java 17
+  Selenium           Selenium 4
+  BDD                Cucumber
+  Test Runner        TestNG
+  Build Tool         Maven
+  Reporting          Extent Reports
+  Logging            Log4j2
+  Data               Excel, JSON, Properties
+  CI                 Jenkins
+  Containers         Docker
+  Remote Execution   Selenium Grid
 
-- Maven Project Structure
-- Framework Constants
-- Browser Configuration
-- DriverFactory
-- DriverManager
-- ConfigReader
-- BrowserType Enum
+------------------------------------------------------------------------
 
----
+# 📂 Key Framework Components
 
-### Selenium
+-   DriverFactory
+-   DriverManager
+-   BrowserOptionsFactory
+-   BrowserManager
+-   ExecutionManager
+-   EnvironmentManager
+-   UrlManager
+-   ConfigReader (Thread-safe Holder Singleton)
+-   BasePage
+-   WaitFactory
+-   ElementActions
+-   ReportManager
+-   ScreenshotUtil
+-   Hooks
 
-- Selenium 4
-- Explicit Waits
-- BasePage
-- Login Automation
+------------------------------------------------------------------------
 
----
+# ✅ Implemented Features
 
-### BDD
+## Core
 
-- Cucumber
-- Feature Files
-- Step Definitions
-- Hooks
-- Runner
+-   Factory Pattern
+-   Singleton Pattern
+-   Page Object Model
+-   Thread-safe Driver Management
+-   Configuration Management
+-   Environment Switching
 
----
+## Automation
 
-### Design
+-   Cross Browser Execution
+-   Headless Execution
+-   Parallel Execution
+-   Local & Remote Execution
+-   Screenshot on Failure
+-   Explicit Wait Framework
 
-- Thread Safe Driver Management
-- Singleton Pattern
-- Factory Pattern
-- Page Object Model
-- Layered Architecture
+## Reporting
 
----
+-   Extent Reports
+-   Log4j2 Logging
 
-# 📚 Documentation
+## Test Data
 
-The framework documentation is maintained alongside the source code.
+-   Excel
+-   JSON
+-   Properties
 
-| File | Description |
-|------|-------------|
-| 01-FrameworkEvolution.md | Framework evolution from v0.1 onward |
-| 02-GitCommitHistory.md | Engineering purpose of every Git commit |
-| 03-Architecture.md | Complete framework architecture |
-| 04-DesignPatterns.md | Design patterns used throughout the framework |
+## CI/CD
 
----
+-   Jenkins Parameterized Jobs
+-   Docker
+-   Selenium Grid
+-   Parallel Remote Execution
 
-# ▶️ How to Execute
+------------------------------------------------------------------------
 
-Clone the repository
+# ▶ Execution
 
-```
-git clone https://github.com/nikhil-pande-automation/smart-selenium-framework.git
-```
+## Local
 
-Move into the project
-
-```
-cd smart-selenium-framework
-```
-
-Run using Maven
-
-```
+``` bash
 mvn clean test
 ```
 
----
+## Chrome
 
-# 🧠 Design Principles
+``` bash
+mvn clean test -Dbrowser=chrome
+```
 
-The framework follows the following principles:
+## Headless
 
-- Single Responsibility Principle (SRP)
-- Separation of Concerns
-- Layered Architecture
-- Thread Safety
-- Reusability
-- Maintainability
-- Scalability
-- Clean Code
+``` bash
+mvn clean test -Dheadless=true
+```
 
----
+## Remote Grid
 
-# 📌 Current Status
+``` bash
+mvn clean test -Dexecution=remote -Dgrid.url=http://localhost:4444/wd/hub
+```
 
-Current Version
+------------------------------------------------------------------------
 
-**v0.6.0**
+# 🧪 Jenkins Parameters
 
-Status
+-   BROWSER
+-   HEADLESS
+-   EXECUTION
+-   ENVIRONMENT
+-   THREADS
 
-🟢 Active Development
+------------------------------------------------------------------------
 
-Completed
+# 💡 Design Patterns
 
-- Framework Core
-- Login Automation
-- Configuration Layer
-- Browser Management
-- BDD Integration
+-   Factory
+-   Singleton (Holder Idiom)
+-   Page Object Model
 
-Currently Working On
+# SOLID Principles
 
-- Utility Layer
-- Reporting
-- Logging
+-   Single Responsibility Principle
+-   Separation of Concerns
+-   Dependency separation between creation and storage
+-   Reusable utility classes
 
----
+------------------------------------------------------------------------
 
-# 🗺 Roadmap
+# 📈 Project Status
 
-Upcoming Modules
+**Version:** v1.0
 
-- JavaScript Utility
-- Screenshot Utility
-- Dropdown Utility
-- Alert Utility
-- Frame Utility
-- Window Utility
-- Extent Reports
-- Log4j2
-- TestNG Listeners
-- Excel Data Driven Framework
-- Parallel Execution
-- Docker Execution
-- Jenkins Integration
+Completed:
 
----
+-   Framework Core
+-   Parallel Execution
+-   Docker Execution
+-   Selenium Grid
+-   Jenkins Integration
+-   Data Driven Testing
+-   Extent Reporting
+-   Logging
+-   Cross Browser Support
 
-# 🤝 Contribution
-
-This project is currently maintained by the author for learning, framework engineering, and interview preparation.
-
-Future improvements will continue to follow the same architectural principles documented in the repository.
-
----
+------------------------------------------------------------------------
 
 # 👨‍💻 Author
 
 **Nikhil Pande**
 
-Senior QA Automation Engineer
+Software QA Automation Engineer
 
----
+This framework was built incrementally with production-oriented
+engineering practices and serves as both a learning project and an
+interview-ready automation framework.
 
-# ⭐ Repository Vision
+-------------------------------------------------------------------------
 
-This project is not intended to be a collection of Selenium scripts.
+Current status
 
-Its goal is to demonstrate how an automation framework evolves using engineering principles, design patterns, clean architecture, and reusable components similar to those used in enterprise software development.
+framework now includes:
+
+✅ Selenium 4
+✅ Java 17 (Java 8 coding style)
+✅ Cucumber + TestNG
+✅ Page Object Model
+✅ ThreadLocal WebDriver
+✅ Thread-safe ConfigReader
+✅ BrowserManager
+✅ EnvironmentManager
+✅ ExecutionManager
+✅ GridManager
+✅ BrowserOptionsFactory
+✅ WaitFactory
+✅ ElementActions
+✅ Excel + JSON test data
+✅ Extent Reports
+✅ Log4j2
+✅ Screenshot on failure
+✅ Local execution
+✅ Remote execution
+✅ Docker
+✅ Selenium Grid
+✅ Jenkins
+✅ Jenkins Parameterized Builds
+✅ Parallel execution
+✅ Professional README
