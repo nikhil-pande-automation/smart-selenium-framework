@@ -7,9 +7,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import static com.nikhil.api.specs.RequestSpecBuilderUtil.getRequestSpec;
 import static org.hamcrest.Matchers.equalTo;
+import static com.nikhil.api.specs.ResponseSpecBuilderUtil.getSuccessResponseSpec;
 
 public class BookingCrudTest {
 
@@ -48,7 +48,7 @@ public class BookingCrudTest {
                 .put("/booking/" + bookingId);
 
         response.then()
-                .statusCode(200)
+                .spec(getSuccessResponseSpec())
                 .body("lastname", equalTo("PUpdated"))
                 .body("additionalneeds", equalTo("BreakfastUpdated"));
         System.out.println("Booking Updated Successfully");
@@ -84,7 +84,7 @@ public class BookingCrudTest {
                 .when()
                 .post("/auth");
 
-        response.then().statusCode(200);
+        response.then().spec(getSuccessResponseSpec());
         token = response.jsonPath().getString("token");
         System.out.println("Token : " + token);
     }
@@ -110,7 +110,7 @@ public class BookingCrudTest {
                 .when()
                 .post("/booking");
 
-        response.then().statusCode(200);
+        response.then().spec(getSuccessResponseSpec());
         // Deserialization: JSON -> POJO using Jackson. means JSON to CreateBookingResponse Object conversion
         /**
          * How do you deserialize a response in Rest Assured?
