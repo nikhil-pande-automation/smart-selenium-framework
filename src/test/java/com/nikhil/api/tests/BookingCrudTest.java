@@ -1,5 +1,8 @@
 package com.nikhil.api.tests;
 
+import com.nikhil.api.pojo.Booking;
+import com.nikhil.api.pojo.BookingDates;
+import com.nikhil.api.pojo.CreateBookingResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
@@ -85,28 +88,38 @@ public class BookingCrudTest {
     }
 
     private void createBooking() {
-        String reqBody = """
-                {
-                "firstname":"Nik",
-                "lastname":"P",
-                "totalprice":5000,
-                "depositpaid":true,
-                "bookingdates":{
-                    "checkin":"2026-07-20",
-                    "checkout":"2026-07-25"
-                    },
-                    "additionalneeds":"Breakfast"
-                }
-                """;
+
+        //Serialization: JSON to POJO conversion
+        BookingDates bookingDates = new BookingDates();
+        bookingDates.setCheckin("2026-07-20");
+        bookingDates.setCheckout("2026-07-25");
+        Booking booking = new Booking();
+        booking.setFirstname("Nik");
+        booking.setLastname("P");
+        booking.setTotalprice(5000);
+        booking.setDepositpaid(true);
+        booking.setBookingdates(bookingDates);
+        booking.setAdditionalneeds("Breakfast");
 
         Response response = RestAssured
                 .given()
                 .contentType("application/json")
-                .body(reqBody)
+                .body(booking)
                 .when()
                 .post("https://restful-booker.herokuapp.com/booking");
         response.then().statusCode(200);
-        bookingId = response.jsonPath().getInt("bookingid");
+        //Deserialization JSON to POJO conversion by JACKSON. means JSON to CreateBookingResponse Object conversion
+        /**
+         * How do you deserialize a response in Rest Assured?
+         *
+         * We create POJO classes matching the response JSON structure and use response.as(MyPojo.class).
+         * Rest Assured uses Jackson internally to convert the JSON response into a Java object,
+         * after which we access values through getters instead of JSONPath.
+         */
+        CreateBookingResponse bookingResponse = response.as(CreateBookingResponse.class);
+        bookingId = bookingResponse.getBookingid();
         System.out.println("Booking Id : " + bookingId);
+        System.out.println(bookingResponse.getBooking().getFirstname());
+        System.out.println(bookingResponse.getBooking().getLastname());
     }
 }
