@@ -7,6 +7,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static com.nikhil.api.specs.RequestSpecBuilderUtil.getRequestSpec;
 import static org.hamcrest.Matchers.equalTo;
 
 public class BookingCrudTest {
@@ -39,12 +41,11 @@ public class BookingCrudTest {
 
         Response response = RestAssured
                 .given()
-                .contentType("application/json")
-                .accept("application/json")
+                .spec(getRequestSpec())
                 .cookie("token", token)
                 .body(reqBody)
                 .when()
-                .put("https://restful-booker.herokuapp.com/booking/" + bookingId);
+                .put("/booking/" + bookingId);
 
         response.then()
                 .statusCode(200)
@@ -57,9 +58,10 @@ public class BookingCrudTest {
     public void deleteBooking() {
         Response response = RestAssured
                 .given()
+                .spec(getRequestSpec())
                 .cookie("token", token)
                 .when()
-                .delete("https://restful-booker.herokuapp.com/booking/" + bookingId);
+                .delete("/booking/" + bookingId);
 
         response.then().statusCode(201);
 
@@ -77,10 +79,10 @@ public class BookingCrudTest {
 
         Response response = RestAssured
                 .given()
-                .contentType("application/json")
+                .spec(getRequestSpec())
                 .body(reqBody)
                 .when()
-                .post("https://restful-booker.herokuapp.com/auth");
+                .post("/auth");
 
         response.then().statusCode(200);
         token = response.jsonPath().getString("token");
@@ -103,12 +105,13 @@ public class BookingCrudTest {
 
         Response response = RestAssured
                 .given()
-                .contentType("application/json")
+                .spec(getRequestSpec())
                 .body(booking)
                 .when()
-                .post("https://restful-booker.herokuapp.com/booking");
+                .post("/booking");
+
         response.then().statusCode(200);
-        //Deserialization JSON to POJO conversion by JACKSON. means JSON to CreateBookingResponse Object conversion
+        // Deserialization: JSON -> POJO using Jackson. means JSON to CreateBookingResponse Object conversion
         /**
          * How do you deserialize a response in Rest Assured?
          *
